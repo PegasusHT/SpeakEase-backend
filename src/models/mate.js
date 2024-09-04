@@ -8,7 +8,11 @@ const MateSchema = new Schema({
     },
     field: {
         type: String,
-        required: [true, "Field is required"]
+        default: null,
+    },
+    role: {
+        type: String,
+        default: null,
     },
     description: {
         type: String,
