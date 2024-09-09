@@ -33,7 +33,7 @@ Conversation Response: [Your conversational response here]
 ---
 Feedback:
 Corrected Version: [Corrected version of the user's last message, or "No correction needed" if it's correct]
-Explanation: [Your explanation of any corrections or comments on the user's language use, or just send 'pppassed' if no correction needed]
+Explanation: [Your explanation of any corrections or comments on the user's language use, or just send exactly the secret phrase'pppassed' if no correction needed]
 ---
 
 Here's the conversation history:
