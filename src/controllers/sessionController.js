@@ -8,6 +8,7 @@ const create = async (req, res) => {
     try {
         res.json({ greetingMessage: greetingMessage});
     } catch (error) {
+        console.log('err: ', error)
         res.status(500).json({ error: "Failed to generate greeting message." });
     }
 };
