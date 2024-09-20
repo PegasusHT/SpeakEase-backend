@@ -14,7 +14,6 @@ const ScenarioSchema = new Schema({
         pronunciation: { type: String, required: true }
     }],
     image: { type: String, required: true },
-    isNew: { type: Boolean, default: false }
 });
 
 const Scenario = mongoose.model('Scenario', ScenarioSchema);

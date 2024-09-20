@@ -77,8 +77,6 @@ const getScenarioDetails = async (req, res) => {
             console.log('aiRole is null or undefined in the scenario');
         }
 
-        console.log('Final scenario object:', JSON.stringify(scenario, null, 2));
-
         res.json(scenario);
     } catch (error) {
         console.error('Error in getScenarioDetails:', error);

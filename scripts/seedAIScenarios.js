@@ -2,16 +2,17 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const Scenario = require('../src/models/scenario');
 const AIMate = require('../src/models/aiMate');
+const MONGODB_URI = 'mongodb+srv://jimmybuidev:fY84SIfeCGqxE15i@cluster0.75f3w.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
 
 const seedData = async () => {
   // Connect to MongoDB
-  if (!process.env.MONGODB_URI) {
+  if (!MONGODB_URI) {
     throw new Error('MONGODB_URI is not defined in the environment variables');
   }
 
   // Connect to MongoDB
   try {
-    await mongoose.connect(process.env.MONGODB_URI, {
+    await mongoose.connect(MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -136,7 +137,6 @@ const seedData = async () => {
       { phrase: "Can I leave my contact information with you?", pronunciation: "/kæn aɪ liːv maɪ ˈkɒntækt ˌɪnfərˈmeɪʃən wɪð juː?/" }
     ],
     image: "https://example.com/lost-and-found.jpg",
-    isNew: true
   },
   {
     id: 2,
@@ -152,7 +152,6 @@ const seedData = async () => {
       { phrase: "Can you recommend a brewing method for a stronger flavor?", pronunciation: "/kæn juː ˌrekəˈmend ə ˈbruːɪŋ ˈmeθəd fɔːr ə ˈstrɒŋgər ˈfleɪvər?/" }
     ],
     image: "https://example.com/latte-art-challenge.jpg",
-    isNew: true
   },
   {
     id: 3,
@@ -168,7 +167,6 @@ const seedData = async () => {
       { phrase: "What should I do in this situation?", pronunciation: "/wɒt ʃʊd aɪ duː ɪn ðɪs ˌsɪtjuˈeɪʃən?/" }
     ],
     image: "https://example.com/suspicious-activity.jpg",
-    isNew: false
   },
   {
     id: 4,
@@ -184,7 +182,6 @@ const seedData = async () => {
       { phrase: "How can I prevent this from happening again?", pronunciation: "/haʊ kæn aɪ prɪˈvent ðɪs frəm ˈhæpənɪŋ əˈgen?/" }
     ],
     image: "https://example.com/tech-troubleshooting.jpg",
-    isNew: true
   },
   {
     id: 5,
@@ -200,7 +197,6 @@ const seedData = async () => {
       { phrase: "Can you tell me more about the artist's technique?", pronunciation: "/kæn juː tel miː mɔːr əˈbaʊt ði ˈɑːrtɪsts tekˈniːk?/" }
     ],
     image: "https://example.com/museum-mystery.jpg",
-    isNew: true
   },
   {
     id: 6,
@@ -216,7 +212,6 @@ const seedData = async () => {
       { phrase: "How often should I work out to see results?", pronunciation: "/haʊ ˈɒfən ʃʊd aɪ wɜːrk aʊt tuː siː rɪˈzʌlts?/" }
     ],
     image: "https://example.com/fitness-goal-setting.jpg",
-    isNew: false
   },
   {
     id: 7,
@@ -232,7 +227,6 @@ const seedData = async () => {
       { phrase: "What are some popular catering options for a birthday celebration?", pronunciation: "/wɒt ɑːr səm ˈpɒpjələr ˈkeɪtərɪŋ ˈɒpʃənz fɔːr ə ˈbɜːrθdeɪ ˌseləˈbreɪʃən?/" }
     ],
     image: "https://example.com/surprise-party-planning.jpg",
-    isNew: true
   },
   {
     id: 8,
@@ -248,7 +242,6 @@ const seedData = async () => {
       { phrase: "What's the difference between watercolors and acrylics?", pronunciation: "/wɒts ðə ˈdɪfrəns bɪˈtwiːn ˈwɔːtərˌkʌlərz ænd əˈkrɪlɪks?/" }
     ],
     image: "https://example.com/artistic-expression.jpg",
-    isNew: false
   },
 
   {
@@ -265,7 +258,6 @@ const seedData = async () => {
       { phrase: "How can I help my pet maintain a healthy weight?", pronunciation: "/haʊ kæn aɪ help maɪ pet meɪnˈteɪn ə ˈhelθi weɪt?/" }
     ],
     image: "https://example.com/pet-health-concerns.jpg",
-    isNew: true
   },
   {
     id: 10,
@@ -281,7 +273,6 @@ const seedData = async () => {
       { phrase: "Can you explain the difference between stocks and bonds?", pronunciation: "/kæn juː ɪkˈspleɪn ðə ˈdɪfrəns bɪˈtwiːn stɒks ænd bɒndz?/" }
     ],
     image: "https://example.com/financial-planning.jpg",
-    isNew: false
   },
   {
     id: 11,
@@ -297,7 +288,6 @@ const seedData = async () => {
       { phrase: "This sauce has a complex flavor. How would you describe it?", pronunciation: "/ðɪs sɔːs hæz ə ˈkɒmpleks ˈfleɪvər. haʊ wʊd juː dɪˈskraɪb ɪt?/" }
     ],
     image: "https://example.com/cooking-show-participant.jpg",
-    isNew: true
   },
   {
     id: 12,
@@ -313,7 +303,6 @@ const seedData = async () => {
       { phrase: "What's your favorite travel hack for budget-friendly trips?", pronunciation: "/wɒts jɔːr ˈfeɪvərɪt ˈtrævl hæk fɔːr ˈbʌdʒɪt-ˈfrendli trɪps?/" }
     ],
     image: "https://example.com/travel-vlog-collaboration.jpg",
-    isNew: false
   },
   ];
 
