@@ -1,9 +1,12 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const mongoose = require('mongoose');
 const Scenario = require('../src/models/scenario');
 const AIMate = require('../src/models/aiMate');
-const MONGODB_URI = 'mongodb+srv://jimmybuidev:fY84SIfeCGqxE15i@cluster0.75f3w.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
-
+const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_PW = process.env.MONGODB_PW;
+console.log(MONGODB_PW);
+console.log(MONGODB_URI)
 const seedData = async () => {
   // Connect to MongoDB
   if (!MONGODB_URI) {
@@ -167,6 +170,7 @@ const seedData = async () => {
       { phrase: "What should I do in this situation?", pronunciation: "/wɒt ʃʊd aɪ duː ɪn ðɪs ˌsɪtjuˈeɪʃən?/" }
     ],
     image: "https://example.com/suspicious-activity.jpg",
+    isNew: false
   },
   {
     id: 4,
@@ -212,6 +216,7 @@ const seedData = async () => {
       { phrase: "How often should I work out to see results?", pronunciation: "/haʊ ˈɒfən ʃʊd aɪ wɜːrk aʊt tuː siː rɪˈzʌlts?/" }
     ],
     image: "https://example.com/fitness-goal-setting.jpg",
+    isNew: false
   },
   {
     id: 7,
@@ -242,6 +247,7 @@ const seedData = async () => {
       { phrase: "What's the difference between watercolors and acrylics?", pronunciation: "/wɒts ðə ˈdɪfrəns bɪˈtwiːn ˈwɔːtərˌkʌlərz ænd əˈkrɪlɪks?/" }
     ],
     image: "https://example.com/artistic-expression.jpg",
+    isNew: false
   },
 
   {
@@ -273,6 +279,7 @@ const seedData = async () => {
       { phrase: "Can you explain the difference between stocks and bonds?", pronunciation: "/kæn juː ɪkˈspleɪn ðə ˈdɪfrəns bɪˈtwiːn stɒks ænd bɒndz?/" }
     ],
     image: "https://example.com/financial-planning.jpg",
+    isNew: false
   },
   {
     id: 11,
@@ -303,6 +310,7 @@ const seedData = async () => {
       { phrase: "What's your favorite travel hack for budget-friendly trips?", pronunciation: "/wɒts jɔːr ˈfeɪvərɪt ˈtrævl hæk fɔːr ˈbʌdʒɪt-ˈfrendli trɪps?/" }
     ],
     image: "https://example.com/travel-vlog-collaboration.jpg",
+    isNew: false
   },
   ];
 

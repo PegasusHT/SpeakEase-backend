@@ -1,8 +1,9 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const mongoose = require('mongoose');
 const Scenario = require('../src/models/scenario');
 const AIMate = require('../src/models/aiMate');
-const MONGODB_URI = 'mongodb+srv://jimmybuidev:fY84SIfeCGqxE15i@cluster0.75f3w.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+const MONGODB_URI = process.env.MONGODB_URI;
 
 const clearDatabase = async () => {
   if (!MONGODB_URI) {
