@@ -2,24 +2,31 @@ const express = require("express");
 const router = express.Router();
 const Scenario = require('../models/scenario');
 const AIMate = require('../models/aiMate');
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
 const create = async (req, res) => {
     try {
-        const { scenarioId, aiName, role, traits, context } = req.body;
+        const { scenarioId, customScenario, aiName, role, traits, context, userRole, objectives } = req.body;
 
-        if (scenarioId) {
+        if (scenarioId && scenarioId !== 'custom') {
             // Handling roleplay scenario
-            const scenario = await Scenario.findOne({ id: scenarioId }).populate('aiRole');
+            const scenario = await Scenario.findOne({ id: parseInt(scenarioId) }).populate('aiRole');
 
             if (!scenario) {
                 return res.status(404).json({ error: "Scenario not found." });
             }
 
-            const { title, aiRole, userRole } = scenario;
+            const { title, aiRole, userRole: scenarioUserRole } = scenario;
             const { name, role: aiRoleTitle, traits: aiTraits } = aiRole;
 
-            const greetingMessage = generateDynamicGreeting(name, aiRoleTitle, aiTraits, title, userRole, context);
+            const greetingMessage = generateDynamicGreeting(name, aiRoleTitle, aiTraits, title, scenarioUserRole, context);
 
+            return res.json({ greetingMessage });
+        } else if (customScenario) {
+            // Handling custom scenario
+            const greetingMessage = await generateCustomScenarioGreeting(aiName, role, traits, userRole, objectives, customScenario);
             return res.json({ greetingMessage });
         } else if (aiName && role && traits && context) {
             // Handling Mia's main chat
@@ -106,6 +113,40 @@ function generateDynamicGreeting(name, role, traits, title, userRole, context) {
 
     // Combine all parts
     return `${selectedIntro} ${scenarioLine} ${selectedPrompt}`;
+}
+
+async function generateCustomScenarioGreeting(aiName, aiRole, aiTraits, userRole, objectives, customScenario) {
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+
+    const prompt = {
+        contents: [
+            {
+                role: "user",
+                parts: [
+                    {
+                        text: `Generate a friendly and engaging greeting for a custom English practice scenario. The AI assistant's name is ${aiName}, and their role is ${aiRole}. Their traits are: ${aiTraits}. The user's role is ${userRole}. The objectives of the conversation are: ${objectives.join(', ')}. The user provided this scenario: "${customScenario}".
+
+The greeting should:
+1. Be warm and welcoming
+2. Briefly mention the AI's role and one or two key traits
+3. Acknowledge the user's role or the scenario they provided
+4. Encourage the user to start the conversation
+5. Be concise (2-3 sentences)
+
+Do not explicitly repeat the entire scenario or objectives. Instead, creatively incorporate elements of them into the greeting.`
+                    }
+                ]
+            }
+        ]
+    };
+
+    try {
+        const result = await model.generateContent(prompt);
+        return result.response.text().trim();
+    } catch (error) {
+        console.error('Error generating custom greeting:', error);
+        return `Hello! I'm ${aiName}, ready to help you practice English in this custom scenario. Let's get started!`;
+    }
 }
 
 function generateMiaGreeting(name, role, traits, context) {
