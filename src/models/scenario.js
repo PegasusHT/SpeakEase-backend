@@ -2,11 +2,12 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const ScenarioSchema = new Schema({
-    id: { type: Number, required: true, unique: true },
+    id: { type: Number, required: true },
     title: { type: String, required: true },
     description: { type: String, required: true },
     context: { type: String, required: true },
-    aiRole: { type: Schema.Types.ObjectId, ref: 'AIMate', required: true },
+    aiMateId: { type: Schema.Types.ObjectId, required: true },
+    aiMateRole: { type: String, required: true },
     userRole: { type: String, required: true },
     objectives: [{ type: String }],
     usefulPhrases: [{

@@ -10,12 +10,11 @@ const AIMateSchema = new Schema({
         type: String,
         default: null,
     },
-    role: {
+    primaryRole: {
         type: String,
         default: null,
     },
     image: { type: String, required: true },
-    backgroundImage: { type: String, required: true }
-}, { collection: 'mate' }); 
+}); 
 
 module.exports = mongoose.model('AIMate', AIMateSchema);

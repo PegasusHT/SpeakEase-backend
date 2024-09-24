@@ -5,76 +5,72 @@ const AIMate = mongoose.model('AIMate');
 // Get all options with their relationships
 const getOptions = async (req, res) => {
     try {
-        const scenarios = await Scenario.find().select('userRole context');
+        const scenarios = await Scenario.find().select('userRole');
         
-        // Create a map of roles to contexts
-        const roleContextMap = {};
-        scenarios.forEach(scenario => {
-            if (!roleContextMap[scenario.userRole]) {
-                roleContextMap[scenario.userRole] = new Set();
-            }
-            roleContextMap[scenario.userRole].add(scenario.context);
-        });
+        // Define the main categories
+        const mainCategories = {
+            "Student": ["Elementary Student", "High School Student", "College Student"],
+            "Professional": ["Software Developer", "Financial Advisor", "Healthcare Professional", "Sales Representative"],
+            "Traveler": ["Tourist", "Cultural Explorer"],
+            "Resident": ["Newcomer/Immigrant", "Local Resident", "Parent/Guardian"]
+        };
 
-        // Convert sets to arrays
-        for (let role in roleContextMap) {
-            roleContextMap[role] = Array.from(roleContextMap[role]);
-        }
-
-        // Get unique roles and contexts
-        const roles = Object.keys(roleContextMap);
-        const contexts = Array.from(new Set(scenarios.map(s => s.context)));
+        // Create a set of unique user roles
+        const uniqueRoles = new Set(scenarios.map(scenario => scenario.userRole));
 
         res.json({
-            roles,
-            contexts,
-            roleContextMap
+            mainCategories,
+            roles: Array.from(uniqueRoles)
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-// Get scenarios by role and context
-const getByRoleContext = async (req, res) => {
-    const { role, context } = req.query;
+// Get scenarios for a specific user role
+const getScenariosByRole = async (req, res) => {
+    const { role } = req.query;
     try {
-        const scenarios = await Scenario.find({ userRole: role, context: context })
-            .select('id title image isNew');
+        const scenarios = await Scenario.find({ userRole: role })
+            .select('id title image isNew context');
         res.json(scenarios);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
-
 // Get scenario details
 const getScenarioDetails = async (req, res) => {
     try {
-        const scenarioId = parseInt(req.params.id);
+        const scenarioId = req.params.stringId;
         
-        if (isNaN(scenarioId)) {
+        if (!mongoose.Types.ObjectId.isValid(scenarioId)) {
             return res.status(400).json({ message: 'Invalid scenario ID' });
         }
 
-        let scenario = await Scenario.findOne({ id: scenarioId });
+        let scenario = await Scenario.findById(scenarioId);
         
         if (!scenario) {
             return res.status(404).json({ message: 'Scenario not found' });
         }
 
-        // Attempt to manually populate aiRole
-        if (scenario.aiRole) {
-            const aiMate = await AIMate.findById(scenario.aiRole);
-            
+        // Fetch the AIMate information
+        if (scenario.aiMateId) {
+            const aiMate = await AIMate.findById({ _id: scenario.aiMateId });
             if (aiMate) {
-                scenario = scenario.toObject(); // Convert to a plain JavaScript object
-                aiMate.traits = aiMate.traits.split(',').map(trait => trait.trim()); // Convert traits to array
-                scenario.aiRole = aiMate;
+                scenario = scenario.toObject(); 
+                scenario.aiMate = {
+                    ...aiMate.toObject(),
+                    role: scenario.aiMateRole, 
+                    traits: aiMate.traits.split(',').map(trait => trait.trim()) // Convert traits to array
+                };
+                // remove response secret fields
+                delete scenario.aiMateId;  
+                delete scenario.aiMateRole;  
             } else {
-                console.log('AIMate not found for ID:', scenario.aiRole);
+                console.log('AIMate not found for name:', scenario.aiMateId);
             }
         } else {
-            console.log('aiRole is null or undefined in the scenario');
+            console.log('aiMateName is null or undefined in the scenario');
         }
 
         res.json(scenario);
@@ -86,6 +82,6 @@ const getScenarioDetails = async (req, res) => {
 
 module.exports = {
     getOptions,
-    getByRoleContext,
+    getScenariosByRole,
     getScenarioDetails
 };

@@ -8,31 +8,43 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
 const create = async (req, res) => {
     try {
-        const { scenarioId, customScenario, aiName, role, traits, context, userRole, objectives } = req.body;
+        const { scenarioId, customScenario, aiName, primaryRole, traits, context, userRole, objectives } = req.body;
 
         if (scenarioId && scenarioId !== 'custom') {
             // Handling roleplay scenario
-            const scenario = await Scenario.findOne({ id: parseInt(scenarioId) }).populate('aiRole');
+            const scenario = await Scenario.findById(scenarioId);
 
             if (!scenario) {
+                console.log(`Scenario not found for ID: ${scenarioId}`);
                 return res.status(404).json({ error: "Scenario not found." });
             }
 
-            const { title, aiRole, userRole: scenarioUserRole } = scenario;
-            const { name, role: aiRoleTitle, traits: aiTraits } = aiRole;
+            const { title, aiMateId, userRole: scenarioUserRole, context: scenarioContext, objectives: scenarioObjectives } = scenario;
+            
+            if (!aiMateId) {
+                console.log(`AI Mate not found for scenario: ${scenarioId}`);
+                return res.status(400).json({ error: "AI Mate not found for this scenario." });
+            }
 
-            const greetingMessage = generateDynamicGreeting(name, aiRoleTitle, aiTraits, title, scenarioUserRole, context);
+            const { name, primaryRole, traits } = await AIMate.findById(aiMateId);
 
-            return res.json({ greetingMessage });
-        } else if (customScenario) {
+            if (!name || !primaryRole || !traits) {
+                return res.status(400).json({ error: "Invalid AI Mate data." });
+            }
+
+            const greetingMessage = generateDynamicGreeting(name, primaryRole, traits, title, scenarioUserRole, scenarioContext);
+
+            return res.json({ greetingMessage, scenarioContext, scenarioObjectives });
+        } else if (customScenario) { 
             // Handling custom scenario
-            const greetingMessage = await generateCustomScenarioGreeting(aiName, role, traits, userRole, objectives, customScenario);
-            return res.json({ greetingMessage });
-        } else if (aiName && role && traits && context) {
+            const greetingMessage = await generateCustomScenarioGreeting(aiName, primaryRole, traits, userRole, objectives, customScenario);
+            return res.json({ greetingMessage, scenarioContext: customScenario, scenarioObjectives: objectives });
+        } else if (aiName && primaryRole && traits && context) {
             // Handling Mia's main chat
-            const greetingMessage = generateMiaGreeting(aiName, role, traits, context);
-            return res.json({ greetingMessage });
+            const greetingMessage = generateMiaGreeting(aiName, primaryRole, traits, context);
+            return res.json({ greetingMessage, scenarioContext: context, scenarioObjectives: [] });
         } else {
+            console.log("Invalid request parameters:", req.body);
             return res.status(400).json({ error: "Invalid request parameters." });
         }
     } catch (error) {

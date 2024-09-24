@@ -19,7 +19,12 @@ const sendMessage = async (req, res) => {
         if (chatType === "main") {
             contextPrompt = `You are Mia, an AI language tutor designed to help users practice English through friendly conversation. Your goal is to engage the user in natural dialogue while gently correcting any language mistakes and offering suggestions for improvement. Be encouraging, patient, and adapt your language level to the user's proficiency. Occasionally, introduce new vocabulary or idioms and explain their usage.`;
         } else if (chatType === "roleplay" && scenarioDetails) {
-            contextPrompt = `You are ${scenarioDetails.aiName}, a ${scenarioDetails.aiRole} in a roleplay scenario about ${scenarioDetails.scenarioTitle}. The user is playing the role of ${scenarioDetails.userRole}. While staying in character, your primary goal is still to help the user practice English. Engage in natural dialogue based on the scenario, but also gently correct any language mistakes and offer suggestions for improvement. Adapt your language to fit both your character and the user's proficiency level.`;
+            contextPrompt = `You are ${scenarioDetails.aiMate.name}, a ${scenarioDetails.aiMate.primaryRole} in a roleplay scenario about ${scenarioDetails.title}. The user is playing the role of ${scenarioDetails.userRole}. 
+
+Objectives:
+${scenarioDetails.objectives.map(obj => `- ${obj}`).join('\n')}
+
+While staying in character, your primary goal is to help the user practice English. Engage in natural dialogue work towards the objectives. Gently correct any language mistakes and offer suggestions for improvement. Adapt your language to fit both your character and the user's proficiency level.`;
         } else {
             return res.status(400).json({ error: "Invalid chat type or missing scenario details for roleplay." });
         }
@@ -33,7 +38,7 @@ const sendMessage = async (req, res) => {
                             text: `${contextPrompt}
 
 Please provide two things:
-1. A conversational response to continue the dialogue, staying true to your character and the scenario context.
+1. A conversational response to continue the dialogue, staying true to your character and the scenario context. Most of the time, keep the max length of the response in 2 sentences. Sometimes, it can be longer but not too often. Guide the conversation towards the scenario objectives.
 2. Feedback on the user's last message, including a corrected version (if needed) and an explanation about any mistakes. Note: don't correct capitalized errors or missing end marks.
 
 Format your response as follows:
