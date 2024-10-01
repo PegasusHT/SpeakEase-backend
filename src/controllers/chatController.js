@@ -17,7 +17,7 @@ const sendMessage = async (req, res) => {
 
         let contextPrompt = "";
         if (chatType === "main") {
-            contextPrompt = `You are Mia, an AI language tutor designed to help users practice English through friendly conversation. Your goal is to engage the user in natural dialogue while gently correcting any language mistakes and offering suggestions for improvement. Be encouraging, patient, and adapt your language level to the user's proficiency. Occasionally, introduce new vocabulary or idioms and explain their usage.`;
+            contextPrompt = `You are Sophia, an AI language tutor designed to help users practice English through friendly conversation. Your goal is to engage the user in natural dialogue while gently correcting any language mistakes and offering suggestions for improvement. Be encouraging, patient, and adapt your language level to the user's proficiency. Occasionally, introduce new vocabulary or idioms and explain their usage.`;
         } else if (chatType === "roleplay" && scenarioDetails) {
             const { aiName, aiRole, scenarioTitle, userRole, objectives } = scenarioDetails;
             contextPrompt = `You are ${aiName}, a ${aiRole} in a roleplay scenario about ${scenarioTitle}. The user is playing the role of ${userRole}. 
@@ -39,16 +39,17 @@ While staying in character, your primary goal is to help the user practice Engli
                             text: `${contextPrompt}
 
 Please provide two things:
-1. A conversational response to continue the dialogue, staying true to your character and the scenario context. Most of the time, keep the max length of the response in 2 sentences. Sometimes, it can be longer but not too often. Guide the conversation towards the scenario objectives.
-2. Feedback on the user's last message, including a corrected version (if needed) and an explanation about any mistakes. Note: don't correct capitalized errors or missing end marks.
+1. A conversational response to continue the dialogue, staying true to your character and the scenario context. Most of the time, keep the max length of the response in 2 sentences. Sometimes, it can be longer but not too often. Don't use asterisk or any special symbols. Guide the conversation towards the scenario objectives.
+2. Feedback on the user's last message, including a corrected version (if needed) and an explanation about any mistakes.
 
 Format your response as follows:
 ---
 Conversation Response: [Your conversational response here]
 ---
 Feedback:
-Corrected Version: [Corrected version of the user's last message, or "No correction needed" if it's correct]. Don't put any special symbol, icon or * into the text.
-Explanation: [Your explanation of any corrections or comments on the user's language use, or just send exactly the secret phrase 'pppassed' if no correction needed]
+Corrected Version: [Corrected version of the user's last message, or "No correction needed" if it's correct]
+Explanation: [Your explanation of any corrections or comments on the user's language use, or "The message is correct." if no correction is needed]
+[ Note: don't correct capitalized errors or missing punctuation and period marks.]
 ---
 
 Here's the conversation history:
@@ -69,7 +70,8 @@ Remember to maintain a friendly, encouraging tone in both your conversation resp
         let reply = '';
         let feedback = {
             correctedVersion: lastUserMessage.content,
-            explanation: "Unable to generate feedback at this time."
+            explanation: "Unable to generate feedback at this time.",
+            isCorrect: false
         };
 
         sections.forEach(section => {
@@ -80,14 +82,17 @@ Remember to maintain a friendly, encouraging tone in both your conversation resp
                 feedbackLines.forEach(line => {
                     if (line.startsWith('Corrected Version:')) {
                         feedback.correctedVersion = line.replace('Corrected Version:', '').trim();
+                        feedback.isCorrect = feedback.correctedVersion === "No correction needed";
                     } else if (line.startsWith('Explanation:')) {
                         feedback.explanation = line.replace('Explanation:', '').trim();
+                        if (feedback.explanation.includes("The message is correct")) {
+                            feedback.isCorrect = true;
+                        }
                     }
                 });
             }
         });
 
-        console.log(prompt.contents[0])
         res.json({ reply, feedback });
     } catch (error) {
         console.error('Error in chat API:', error);

@@ -40,8 +40,8 @@ const create = async (req, res) => {
             const greetingMessage = await generateCustomScenarioGreeting(aiName, primaryRole, traits, userRole, objectives, customScenario);
             return res.json({ greetingMessage, scenarioContext: customScenario, scenarioObjectives: objectives });
         } else if (aiName && primaryRole && traits && context) {
-            // Handling Mia's main chat
-            const greetingMessage = generateMiaGreeting(aiName, primaryRole, traits, context);
+            // Handling Sophia's main chat
+            const greetingMessage = generateSophiaGreeting(aiName, primaryRole, traits, context);
             return res.json({ greetingMessage, scenarioContext: context, scenarioObjectives: [] });
         } else {
             console.log("Invalid request parameters:", req.body);
@@ -161,7 +161,7 @@ Do not explicitly repeat the entire scenario or objectives. Instead, creatively 
     }
 }
 
-function generateMiaGreeting(name, role, traits, context) {
+function generateSophiaGreeting(name, role, traits, context) {
     const traitArray = traits.split(',').map(trait => trait.trim());
     
     const intros = [
