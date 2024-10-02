@@ -165,7 +165,7 @@ function generateSophiaGreeting(name, role, traits, context) {
     const traitArray = traits.split(',').map(trait => trait.trim());
     
     const intros = [
-        `Hey there! 👋 I'm ${name}, your ${role}!`,
+        `Hey there! 👋 I'm ${name}, your English language buddy!`,
         `Hi! I'm ${name}, and I'm here to help you practice English.`,
         `Hello! ${name} here, ready to be your English language buddy.`
     ];
