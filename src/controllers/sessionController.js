@@ -145,7 +145,7 @@ The greeting should:
 4. Encourage the user to start the conversation
 5. Be concise (2-3 sentences)
 
-Do not explicitly repeat the entire scenario or objectives. Instead, creatively incorporate elements of them into the greeting.`
+[Note: Don't use asterisk or any special symbols. Do not explicitly repeat the entire scenario or objectives. Instead, creatively incorporate elements of them into the greeting.]`
                     }
                 ]
             }
