@@ -39,7 +39,7 @@ While staying in character, your primary goal is to help the user practice Engli
                             text: `${contextPrompt}
 
 Please provide two things:
-1. A conversational response to continue the dialogue, staying true to your character and the scenario context. Most of the time, keep the max length of the response in 2 sentences. Sometimes, it can be longer but not too often. Guide the conversation towards the scenario objectives.
+1. A conversational response to continue the dialogue, staying true to your character and the scenario context. Most of the time, keep the max length of the response in 2 sentences. Sometimes, it can be longer but not too often. Guide the conversation towards the scenario objectives. [ Note: Don't use asterisk or any special symbols.]
 2. Feedback on the user's last message, including a corrected version (if needed) and an explanation about any mistakes. Be very careful and precise in your feedback. Only suggest corrections for actual grammatical errors or inappropriate word usage. Do not change stylistic choices that are grammatically correct.
 
 Format your response as follows:
@@ -47,7 +47,7 @@ Format your response as follows:
 Conversation Response: [Your conversational response here]
 ---
 Feedback:
-Corrected Version: [Corrected version of the user's last message, or "No correction needed" if it's correct]
+Corrected Version: [Corrected version of the user's last message, or "No correction needed" if it's correct][ Note: Don't use asterisk or any special symbols.]
 Explanation: [Your explanation of any corrections or comments on the user's language use, or "The message is grammatically correct and well-structured." if no correction is needed]
 [ Note: don't correct capitalized errors or missing punctuation and period marks. Don't use asterisk or any special symbols. Be very careful not to suggest unnecessary changes to correct sentences.]
 ---
