@@ -4,10 +4,12 @@ require('dotenv').config();
 
 require('./models/aiMate');
 require('./models/scenario');
+require('./models/user');
 
 const sessionRoutes = require('./routes/session')
 const chatRoutes = require('./routes/chat')
 const scenariosRoutes = require('./routes/scenarios'); 
+const authRoutes = require('./routes/auth');
 
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 
@@ -22,6 +24,7 @@ mongoose.connect(process.env.MONGODB_URI)
 app.use('/api/session', sessionRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/scenarios', scenariosRoutes); 
+app.use('/api/auth', authRoutes)
 
 app.use(notFound);
 app.use(errorHandler);
