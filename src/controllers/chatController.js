@@ -47,9 +47,9 @@ Format your response as follows:
 Conversation Response: [Your conversational response here]
 ---
 Feedback:
-Corrected Version: [Corrected version of the user's last message, or "No correction needed" if it's correct][ Note: Don't put any asterisk or any special symbols.]
+Corrected Version: [Corrected version of the user's last message, or "No correction needed" if it's correct][ Note: Don't put any asterisk or any special symbols; don't correct capitalized errors or missing punctuation]
 Explanation: [Your explanation of any corrections or comments on the user's language use, or "The message is grammatically correct and well-structured." if no correction is needed]
-[ Note: don't correct capitalized errors or missing punctuation and period marks. Don't put any asterisk or any special symbols. Be very careful not to suggest unnecessary changes to correct sentences.]
+[ Note: don't correct capitalized errors or missing punctuation. Don't put any asterisk or any special symbols. Be very careful not to suggest unnecessary changes to correct sentences.]
 ---
 
 Here's the conversation history:
@@ -82,10 +82,11 @@ Remember to maintain a friendly, encouraging tone in both your conversation resp
                 feedbackLines.forEach(line => {
                     if (line.startsWith('Corrected Version:')) {
                         feedback.correctedVersion = line.replace('Corrected Version:', '').trim();
+                        feedback.correctedVersion = feedback.correctedVersion.replace(/\*/g, '');
                         feedback.isCorrect = feedback.correctedVersion === "No correction needed";
                     } else if (line.startsWith('Explanation:')) {
                         feedback.explanation = line.replace('Explanation:', '').trim();
-                        if (feedback.explanation.includes("The message is grammatically correct")) {
+                        if (feedback.explanation.includes("grammatically correct")) {
                             feedback.isCorrect = true;
                         }
                     }

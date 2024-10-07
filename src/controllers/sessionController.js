@@ -173,7 +173,7 @@ function generateSophiaGreeting(name, role, traits, context) {
     const selectedIntro = intros[Math.floor(Math.random() * intros.length)];
 
     const traitPhrases = {
-        friendly: "I'm super excited to chat with you!",
+        friendly: "I'm super excited to chat with you today!",
         patient: "Take your time, there's no rush in our conversations.",
         encouraging: "Every mistake is a chance to learn something new!",
     };
