@@ -1,0 +1,24 @@
+
+
+Student
+    Elementary
+    High School
+    College/University
+
+Professional
+    Software Developer
+    Financial Service
+    Healthcare
+    Salesperson
+
+Resident
+    Newcomer/Immigrant
+    Local
+    Parent/Guardian
+
+Traveler
+    Tourist
+    Cultural Explorer
+    (not implemented now: Cruise Passenger, Adventure Seeker)
+    
+   

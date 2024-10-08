@@ -1,27 +1,20 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const MateSchema = new Schema({
+const AIMateSchema = new Schema({
     name: {
         type: String,
         required: [true, "Name is required"]
     },
-    field: {
+    traits: {
         type: String,
         default: null,
     },
-    role: {
+    primaryRole: {
         type: String,
         default: null,
     },
-    description: {
-        type: String,
-        required: [true, "Description is required"]
-    }
-}, {
-    timestamps: true,
-});
+    image: { type: String, required: true },
+}); 
 
-const Mate = mongoose.model('Mate', MateSchema);
-
-module.exports = Mate;
+module.exports = mongoose.model('AIMate', AIMateSchema);
