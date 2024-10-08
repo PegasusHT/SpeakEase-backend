@@ -18,7 +18,9 @@ exports.oauthAuth = async (req, res) => {
         email,
         firstName,
         lastName,
-        [`${provider}Id`]: providerId
+        [`${provider}Id`]: providerId,
+        isPremium: false,
+        premiumExpiryDate: null
       });
     } else {
       user.email = email;
@@ -30,7 +32,7 @@ exports.oauthAuth = async (req, res) => {
     await user.save();
 
     const token = jwt.sign(
-      { userId: user._id, email: user.email },
+      { userId: user._id, email: user.email, isPremium: user.isPremium },
       process.env.JWT_SECRET,
       { expiresIn: '1d' }
     );
@@ -42,7 +44,9 @@ exports.oauthAuth = async (req, res) => {
         id: user._id,
         email: user.email,
         firstName: user.firstName,
-        lastName: user.lastName
+        lastName: user.lastName,
+        isPremium: user.isPremium,
+        premiumExpiryDate: user.premiumExpiryDate
       }
     });
   } catch (error) {
